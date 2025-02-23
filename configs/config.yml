@@ -1,3 +1,10 @@
-db_url: "postgres://postgres:root@localhost:5436/restfull_api?sslmode=disable"
-
 port: "8080"
+
+db:
+  host:     "localhost"
+  port:     "5436"
+  username: "postgres"
+  password: "root"
+  dbname:   "restfull_api"
+  sslmode:  "disable"
+  url: "postgres://postgres:root@localhost:5436/restfull_api?sslmode=disable"

@@ -1,8 +1,12 @@
 package service
 
-import "github.com/Terrorick2020/GoRestFullApi/pkg/repository"
+import (
+	"github.com/Terrorick2020/GoRestFullApi/internal"
+	"github.com/Terrorick2020/GoRestFullApi/pkg/repository"
+)
 
 type Authorization interface {
+	CreateUser(user internal.User) (int, error)
 }
 
 type TodoList interface {
@@ -18,5 +22,7 @@ type Service struct {
 }
 
 func NewService(repos *repository.Repository) *Service {
-	return &Service{}
+	return &Service{
+		Authorization: NewAuthService(repos.Authorization),
+	}
 }
