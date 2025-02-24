@@ -31,7 +31,7 @@ func NewPostgresDb(cfg Config) (*sqlx.DB, error) {
 			cfg.Host, cfg.Port, cfg.Username, cfg.DbName, cfg.Password, cfg.SslMode,
 		),
 	)
-	if err == nil {
+	if err != nil {
 		return nil, err
 	}
 
