@@ -1,0 +1,21 @@
+definitions:
+    User:
+        description: User represents a user in the system
+        properties:
+            _:
+                format: int64
+                type: integer
+                x-go-name: ID
+            name:
+                type: string
+                x-go-name: Name
+            password:
+                type: string
+                x-go-name: Password
+            username:
+                type: string
+                x-go-name: Username
+        type: object
+        x-go-package: github.com/Terrorick2020/GoRestFullApi/internal
+paths: {}
+swagger: "2.0"

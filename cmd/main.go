@@ -1,6 +1,9 @@
 package main
 
 import (
+	"os/signal"
+	"syscall"
+	"context"
 	"errors"
 	"fmt"
 	"os"
@@ -20,6 +23,16 @@ import (
 	_ "github.com/lib/pq"
 )
 
+// @title Go Restfull Api
+// @version 1.0
+// @description API Server for TodoList Application
+
+// @host localhost:8080
+// @BasePath /
+
+// @securityDefinitions.apikey ApiKeyAuth
+// @in header
+// @name Authorization
 func main() {
 	logrus.SetFormatter(new(logrus.JSONFormatter))
 
@@ -51,9 +64,27 @@ func main() {
 	service := service.NewService(repos)
 	handler := handler.NewHandler(service)
 
-	svr := new(internal.Server)
-	if err := svr.Run(viper.GetString("port"), handler.InitRoutes()); err != nil {
-		logrus.Fatalf("error occured while server run: %s", err.Error())
+	srv := new(internal.Server)
+	go func() {
+		if err := srv.Run(viper.GetString("port"), handler.InitRoutes()); err != nil {
+			logrus.Fatalf("error occured while server run: %s", err.Error())
+		}
+	}()
+
+	logrus.Print("Server started")
+
+	quit := make(chan os.Signal, 1)
+	signal.Notify(quit, syscall.SIGTERM, syscall.SIGINT)
+	<-quit
+
+	logrus.Print("Server shutting down")
+
+	if err := srv.ShutDown(context.Background()); err != nil {
+		logrus.Errorf("error occured on server shutting down: %s", err.Error())
+	}
+
+	if err := db.Close(); err != nil {
+		logrus.Errorf("error occured on db connection close: %s", err.Error())
 	}
 }
 
